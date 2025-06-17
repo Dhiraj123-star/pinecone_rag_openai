@@ -1,0 +1,77 @@
+# Python generated files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+ENV/
+env/
+.venv/
+env.bak/
+venv.bak/
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# FastAPI and Uvicorn
+uvicorn.log
+*.log
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# Operating system files
+.DS_Store
+Thumbs.db
+*.bak
+
+# Package manager and build files
+pip-log.txt
+pip-delete-this-directory.txt
+dist/
+build/
+*.egg
+*.egg-info/
+.eggs/
+wheels/
+*.whl
+*.tar.gz
+*.zip
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+coverage.xml
+*,cover
+htmlcov/
+tox/
+nosetests.xml
+coverage/
+
+# Jupyter notebooks
+.ipynb_checkpoints/
+
+# Miscellaneous
+*.tmp
+*.temp
+*.cache
+*.bak
+*.swp
+*.lock
+*.pid
+*.sock
