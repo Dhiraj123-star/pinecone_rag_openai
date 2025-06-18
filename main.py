@@ -155,6 +155,14 @@ async def search_texts(request: SearchTextRequest):
     matches = query_pinecone(request.query, request.top_k)
     return matches
 
+# API endpoint for health check
+@app.get("/health")
+async def health_check():
+    """
+    Check the health of the API.
+    """
+    return {"status": "healthy"}
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
