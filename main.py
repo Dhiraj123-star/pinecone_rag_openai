@@ -155,59 +155,6 @@ async def search_texts(request: SearchTextRequest):
     matches = query_pinecone(request.query, request.top_k)
     return matches
 
-# API endpoint to reset index (optional, for debugging)
-@app.post("/reset-index")
-async def reset_index():
-    """
-    Delete and recreate the Pinecone index with sample data.
-    """
-    try:
-        pc.delete_index(INDEX_NAME)
-        print(f"Deleted index: {INDEX_NAME}")
-        pc.create_index(
-            name=INDEX_NAME,
-            dimension=DIMENSION,
-            metric=METRIC,
-            spec=ServerlessSpec(
-                cloud=CLOUD,
-                region=REGION
-            )
-        )
-        print(f"Recreated index: {INDEX_NAME}")
-        index = pc.Index(INDEX_NAME)
-        # Upsert sample data
-        sample_texts = [
-            "The sky is blue and the sun is shining.",
-            "Clouds are fluffy and white.",
-            "The moon glows at night."
-        ]
-        sample_ids = [str(uuid.uuid4()) for _ in sample_texts]
-        upsert_data(sample_texts, sample_ids)
-        time.sleep(2)
-        return {"message": f"Index {INDEX_NAME} reset and sample data upserted"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to reset index: {str(e)}")
-
-# Example usage on startup
-@app.on_event("startup")
-async def startup_event():
-    """
-    Upsert sample data on startup if index is empty.
-    """
-    stats = index.describe_index_stats()
-    if stats.get("total_vector_count", 0) == 0:
-        sample_texts = [
-            "The sky is blue and the sun is shining.",
-            "Clouds are fluffy and white.",
-            "The moon glows at night."
-        ]
-        sample_ids = [str(uuid.uuid4()) for _ in sample_texts]
-        upsert_data(sample_texts, sample_ids)
-        print("Sample data upserted successfully.")
-        time.sleep(2)  # Wait for index to update
-    else:
-        print("Index already contains vectors, skipping sample data upsert.")
-
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
