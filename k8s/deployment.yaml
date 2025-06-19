@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pinecone-rag-api
+  labels:
+    app: pinecone-rag-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pinecone-rag-api
+  template:
+    metadata:
+      labels:
+        app: pinecone-rag-api
+    spec:
+      containers:
+      - name: pinecone-rag-api
+        image: dhiraj918106/pinecone_rag_openai:latest
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - secretRef:
+            name: pinecone-rag-api-secrets
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"  # 0.25 CPU
+          limits:
+            memory: "512Mi"
+            cpu: "500m"  # 0.5 CPU
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pinecone-rag-api-service
+spec:
+  selector:
+    app: pinecone-rag-api
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pinecone-rag-api-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: pinecone-rag.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: pinecone-rag-api-service
+            port:
+              number: 8000
