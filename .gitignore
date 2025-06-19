@@ -3,7 +3,6 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
 *.py[cod]
 *$py.class
 
@@ -22,8 +21,10 @@ venv.bak/
 .env.production
 .env.test
 
-# FastAPI and Uvicorn
-uvicorn.log
+# Kubernetes secrets
+k8s/secret.yaml
+
+# Logs
 *.log
 
 # Editor and IDE files
