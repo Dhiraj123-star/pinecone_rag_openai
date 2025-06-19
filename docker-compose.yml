@@ -1,10 +1,8 @@
-version: '3.9'
+version: '3.8'
 
 services:
   pinecone-rag-api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: dhiraj918106/pinecone_rag_openai:latest
     ports:
       - "8000:8000"
     env_file:
