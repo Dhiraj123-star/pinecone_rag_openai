@@ -1,0 +1,24 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t dhiraj918106/pinecone_rag_openai:${{ github.sha }} -t dhiraj918106/pinecone_rag_openai:latest .
+          docker push dhiraj918106/pinecone_rag_openai:${{ github.sha }}
+          docker push dhiraj918106/pinecone_rag_openai:latest
